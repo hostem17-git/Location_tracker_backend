@@ -25,7 +25,7 @@ wss.on("connection", (socket: WebSocket) => {
 
       switch (type) {
         case START_SESSION:
-          manager.createSession(payload.sessionId, socket);
+          manager.createSession(socket);
           break;
 
         case UPDATE_LOCATION:
@@ -62,6 +62,7 @@ wss.on("connection", (socket: WebSocket) => {
       sendMessageToClient(socket, ERROR, { message: "Invalid message format" });
     }
   });
+ 
 });
 
 function sendMessageToClient(socket: WebSocket, type: string, payload: object) {

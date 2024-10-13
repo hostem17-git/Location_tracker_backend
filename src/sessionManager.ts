@@ -13,6 +13,16 @@ import { Session } from "./session";
 export class SessionManager {
   private sessions: Map<string, Session>;
 
+  private  generateRandomId() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 5; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
+  
+
   constructor() {
     this.sessions = new Map<string, Session>();
   }
@@ -28,18 +38,12 @@ export class SessionManager {
     return;
   }
 
-  createSession(sessionId: string, socket: WebSocket) {
-    if (this.sessions.has(sessionId)) {
-      console.log("Session with this ID already exists.");
-      socket.send(
-        JSON.stringify({
-          type: ERROR,
-          payload: { message: `Session ${sessionId} already exists.` },
-        })
-      );
-      return;
-    }
-
+  createSession( socket: WebSocket) {
+    let sessionId;
+    do{
+      sessionId = this.generateRandomId();
+    }while(this.sessions.has(sessionId))
+      
     const newSession = new Session(socket);
     this.sessions.set(sessionId, newSession);
 
