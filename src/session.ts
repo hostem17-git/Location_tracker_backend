@@ -57,6 +57,7 @@ export class Session {
       longitude: string;
     }
   ) {
+    console.log(location);
     if (socket != this.sender) {
       console.log("Not sender");
       return;

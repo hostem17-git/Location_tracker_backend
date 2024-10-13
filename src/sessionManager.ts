@@ -13,15 +13,17 @@ import { Session } from "./session";
 export class SessionManager {
   private sessions: Map<string, Session>;
 
-  private  generateRandomId() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
+  private generateRandomId() {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
     for (let i = 0; i < 5; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
     }
     return result;
   }
-  
 
   constructor() {
     this.sessions = new Map<string, Session>();
@@ -38,19 +40,19 @@ export class SessionManager {
     return;
   }
 
-  createSession( socket: WebSocket) {
+  createSession(socket: WebSocket) {
     let sessionId;
-    do{
+    do {
       sessionId = this.generateRandomId();
-    }while(this.sessions.has(sessionId))
-      
+    } while (this.sessions.has(sessionId));
+
     const newSession = new Session(socket);
     this.sessions.set(sessionId, newSession);
 
     socket.send(
       JSON.stringify({
         type: START_SESSION,
-        payload: { message: `Session ${sessionId} created` },
+        payload: { message: `Session ${sessionId} created`, sessionId },
       })
     );
     console.log(`Session ${sessionId} created`);
